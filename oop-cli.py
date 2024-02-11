@@ -59,7 +59,7 @@ class Record:
             for found_phone in found_phones:
                 print(f"{found_phone.value.ljust(5)}")
         else:
-            print("Number not found.")
+            print("Not found.")
 
 
 class AddressBook(UserDict):
@@ -92,14 +92,14 @@ user01.add_phone("0011223345")
 
 user02 = Record("Alice")
 user02.add_phone('3809766314')
-user02.add_phone('3809766314')
-user02.add_phone('3809766314')
+user02.add_phone('3809766555')
+user02.add_phone('3809766777')
 
 
 user03 = Record("No Name")
 user03.add_phone('3809766314')
-user03.add_phone('3809766314')
-user03.add_phone('3809766314')
+user03.add_phone('3809766222')
+user03.add_phone('3809766333')
 
 # Добавляю юзерів
 user_list = [user01, user02, user03]
@@ -132,3 +132,11 @@ book.find_record("Patrick")
 print("Changed:", '-' * 10)
 user01.edit_phone('0011223345', '0000000000')
 book.find_record("Patrick")
+
+# Шукаємо номер
+print("Finded:", '-' * 10)
+user02.find_phone('3809766314')
+
+# Шукаємо неіснуючий номер
+print("Finded:", '-' * 10)
+user02.find_phone('8803766314')
