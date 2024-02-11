@@ -1,10 +1,6 @@
 from collections import UserDict
 
 
-class CountPhoneNumberError(Exception):
-    pass
-
-
 class Field:
     def __init__(self, value):
         self.value = value
@@ -27,8 +23,7 @@ class Phone(Field):
         if len(self.value) != 10:
             print("The number must consist of the ten digits.")
             return False
-        return True
-    
+        return True   
 
 
 class Record:
@@ -128,10 +123,12 @@ book.find_record("Patrick")
 print("Finded:", '-' * 10)
 book.find_record("Palala")
 
-# Змінюємо номер Патріка
+# Змінюємо номер Патріка вводячи неправельний номер
 print("Not Changed:", '-' * 10)
 user01.edit_phone('0011223345', '00')
 book.find_record("Patrick")
+
+# Змінюємо на правельний
 print("Changed:", '-' * 10)
 user01.edit_phone('0011223345', '0000000000')
 book.find_record("Patrick")
