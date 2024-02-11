@@ -64,8 +64,11 @@ class Record:
 
 class AddressBook(UserDict):
     
-    def add_record(self, record):
-        self.data[record.name.value] = record
+    def add_record(self, record: Record):
+        if record not in self.data:
+            self.data[record.name.value] = record
+        else:
+            print(f"Record: '{record}'' already exists.")
 
     def delete_record(self, name):
         del self.data[name]
@@ -112,31 +115,35 @@ book.print_contacts()
 # Видаляємо запис
 book.delete_record('No Name')
 
+# Добавляємо існуючого користувача
+print("\nAlready exists:", '-' * 10)
+book.add_record('Patrick')
+
 # Вивожу всю базу
-print('Deleted:', '-' * 10)
+print('\nDeleted:', '-' * 10)
 book.print_contacts()
 
 # Шукаємо в контактах
-print("Finded:", '-' * 10)
+print("\nFinded:", '-' * 10)
 book.find_record("Patrick")
 
-print("Finded:", '-' * 10)
+print("\nFinded:", '-' * 10)
 book.find_record("Palala")
 
 # Змінюємо номер Патріка вводячи неправельний номер
-print("Not Changed:", '-' * 10)
+print("\nNot Changed:", '-' * 10)
 user01.edit_phone('0011223345', '00')
 book.find_record("Patrick")
 
 # Змінюємо на правельний
-print("Changed:", '-' * 10)
+print("\nChanged:", '-' * 10)
 user01.edit_phone('0011223345', '0000000000')
 book.find_record("Patrick")
 
 # Шукаємо номер
-print("Finded:", '-' * 10)
+print("\nFinded:", '-' * 10)
 user02.find_phone('3809766314')
 
 # Шукаємо неіснуючий номер
-print("Finded:", '-' * 10)
+print("\nFinded:", '-' * 10)
 user02.find_phone('8803766314')
