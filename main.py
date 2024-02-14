@@ -50,12 +50,19 @@ class Record:
 
     def remove_phone(self, phone: str):
         self.phones = list(filter(lambda p: p.value != phone, self.phones))
-
+        
+        
     def edit_phone(self, phone: str, new_phone: str):
-        new_phone_obj = Phone(new_phone)
-        for p in self.phones:
-            if p.value == phone:
-                p.value = new_phone_obj.value
+        try:
+            if not any(p.value == phone for p in self.phones):
+                raise ValueError("Номер який хочете змінити - не існує.")
+            
+            new_phone_obj = Phone(new_phone)
+            for p in self.phones:
+                if p.value == phone:
+                    p.value = new_phone_obj.value
+        except ValueError as e:
+            return f"Error: {e}"
 
     def find_phone(self, phone: str):
         for p in self.phones:
@@ -71,10 +78,7 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
 
     def find(self, name: str):
-        try:
-            return self.data[name]
-        except KeyError:
-            return None
+        return self.data.get(name)
         
     def delete(self, name: str):
         del self.data[name]
@@ -128,7 +132,11 @@ print(user01)
 
 print("\nМіняємо номер: ", '-' * 10)
 print(user01)
+
+
+print(user01.edit_phone('1000000000', '0000011111'))
 user01.edit_phone('0000000000', '0000011111')
+
 print(user01)
 
 print("\nШукаємо номер: ", '-' * 10)
