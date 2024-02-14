@@ -74,7 +74,7 @@ class AddressBook(UserDict):
         try:
             return self.data[name]
         except KeyError:
-            return f"Record '{name}' does not exist."
+            return None
         
     def delete(self, name: str):
         del self.data[name]
