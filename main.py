@@ -48,7 +48,7 @@ class Record:
         else:
             self.phones.append(phone_obj)
 
-    def delete_phone(self, phone: str):
+    def remove_phone(self, phone: str):
         self.phones = list(filter(lambda p: p.value != phone, self.phones))
 
     def edit_phone(self, phone: str, new_phone: str):
@@ -60,9 +60,9 @@ class Record:
     def find_phone(self, phone: str):
         for p in self.phones:
             if p.value == phone:
-                return f"{self.name.value}'s phone finded: {p.value}"
+                return p
             else:
-                return 'Number not found.'
+                return None
 
 
 class AddressBook(UserDict):
@@ -70,13 +70,13 @@ class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.name.value] = record
 
-    def find_record(self, name: str):
+    def find(self, name: str):
         try:
             return self.data[name]
         except KeyError:
             return f"Record '{name}' does not exist."
         
-    def delete_record(self, name: str):
+    def delete(self, name: str):
         del self.data[name]
 
     def show_contacts(self):
@@ -110,9 +110,9 @@ for contact in contacts:
     
 print(book.show_contacts())
 
-book.delete_record('No name')
+book.delete('No name')
 
-print("\nПісля видалення записуа: ", '-' * 10)
+print("\nПісля видалення запису: ", '-' * 10)
 print(book.show_contacts())
 
 print("\nПомилкові вводи номеру: ", '-' * 10)
@@ -123,7 +123,7 @@ print("\nНормальний ввід номеру: ", '-' * 10)
 print(user01.add_phone('0000000000')) # Додаємо існуючий
 print(user01)
 
-user01.delete_phone('8888888888')
+user01.remove_phone('8888888888')
 print(user01)
 
 print("\nМіняємо номер: ", '-' * 10)
@@ -137,8 +137,8 @@ print(user01.find_phone('0000011121'))
 
 
 print("\nШукаємо запис в базі: ", '-' * 10)
-print(book.find_record('John'))
-print(book.find_record('Lalka'))
+print(book.find('John'))
+print(book.find('Lalka'))
 
 
 
