@@ -10,140 +10,137 @@ class Field:
 
 
 class Name(Field):
-    def __init__ (self, value):
+    def __init__(self, value):
         super().__init__(value)
 
 
 class Phone(Field):
-    
-    def __init__ (self, value):
-        super().__init__(value)
 
+    def __init__(self, value):
+        self.value = value
+        super().__init__(value)
+        
+        if not self.validate_number():
+            raise ValueError("Неправельний номер телефону.")
+    
     def validate_number(self):
-        if len(self.value) != 10:
-            print("The number must consist of the ten digits.")
-            return False
-        return True   
+        return len(self.value) == 10 and self.value.isdigit()
 
 
 class Record:
-    def __init__(self, name):
+    
+    def __init__(self, name: Name):
         self.name = Name(name)
-        self.phones: list(Phone) = []
+        self.phones: list(Phones) = []
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {' '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
     def add_phone(self, phone: Phone):
-        phone_obj = Phone(phone)
-        if phone_obj.validate_number():
-            self.phones.append(Phone(phone))
+        
+        try:
+            phone_obj = Phone(phone)    
+        except ValueError as e:
+            return f"Error: {e}"
+        
+        for p in self.phones:
+            if  p.value == phone_obj.value:
+                return "Phone already exist."
+        else:
+            self.phones.append(phone_obj)
 
-    def remove_phone(self, phone: str) -> None:
+    def delete_phone(self, phone: str):
+        self.phones = list(filter(lambda p: p.value != phone, self.phones))
+
+    def edit_phone(self, phone: str, new_phone: str):
+        new_phone_obj = Phone(new_phone)
         for p in self.phones:
             if p.value == phone:
-                self.phones.remove(p)
-
-    def edit_phone(self, phone: str, new_phone: Phone):
-        new_phone_object = Phone(new_phone)
-        if new_phone_object.validate_number():
-            for p in self.phones:
-                if p.value == phone:
-                    p.value = new_phone_object.value
-        return "The number is not correct."
+                p.value = new_phone_obj.value
 
     def find_phone(self, phone: str):
-        found_phones = list(filter(lambda p: p.value == phone, self.phones))
-        print(f"Users {self.name.value} phone numbers found: ")
-        if found_phones:
-            for found_phone in found_phones:
-                print(f"{found_phone.value.ljust(5)}")
-        else:
-            print("Not found.")
+        for p in self.phones:
+            if p.value == phone:
+                return f"Contact '{self.name.value}' phone finded: {p.value}"
+            else:
+                return 'Number not found.'
 
 
 class AddressBook(UserDict):
     
     def add_record(self, record: Record):
-        if record not in self.data:
-            self.data[record.name.value] = record
-        else:
-            print(f"Record: '{record}'' already exists.")
+        self.data[record.name.value] = record
 
-    def delete_record(self, name):
+    def find_record(self, name: str):
+        try:
+            return self.data[name]
+        except KeyError:
+            return f"Record '{name}' does not exist."
+        
+    def delete_record(self, name: str):
         del self.data[name]
 
-    def find_record(self, name):
-        if self.data.get(name):
-            print(self.data.get(name))
-        else:
-            print("Record not found!")
-
-    def print_contacts(self):
-        for numbers in self.data.values():
-            print(f"{numbers};")
+    def show_contacts(self):
+        result = ""
+        for name, record in self.data.items():
+            result += f"{record}\n"
+        return result
 
 
 book = AddressBook()
 
 
-user01 = Record("Patrick")
-user01.add_phone("0011223343")
-user01.add_phone("0011223344")
-user01.add_phone("0011223345")
+user01 = Record('John')
+user01.add_phone('8888888888')
+user01.add_phone('0000000000')
+user01.add_phone('3806822212')
+
+user02 = Record('Elena')
+user02.add_phone('3809713312')
+user02.add_phone('4867133150')
 
 
-user02 = Record("Alice")
-user02.add_phone('3809766314')
-user02.add_phone('3809766555')
-user02.add_phone('3809766777')
+user03 = Record('No name')
+user03.add_phone('3809722212')
+user03.add_phone('4867133555')
+
+contacts = [user01, user02, user03]
+
+for contact in contacts:
+    book.add_record(contact)
+
+print(book.show_contacts())
+
+book.delete_record('No name')
+
+print("\nПісля видалення запису: ", '-' * 10)
+print(book.show_contacts())
+
+print("\nПомилкові вводи номеру: ", '-' * 10)
+print(user01.add_phone('000000000')) # Недостатньо чисел
+print(user01.add_phone('000000000d')) # Містить букву
+
+print("\nНормальний ввід номеру: ", '-' * 10)
+print(user01.add_phone('0000000000')) # Додаємо існуючий
+print(user01)
+
+user01.delete_phone('8888888888')
+print(user01)
+
+print("\nМіняємо номер: ", '-' * 10)
+print(user01)
+user01.edit_phone('0000000000', '0000011111')
+print(user01)
+
+print("\nШукаємо номер: ", '-' * 10)
+print(user01.find_phone('0000011111'))
+print(user01.find_phone('0000011121'))
 
 
-user03 = Record("No Name")
-user03.add_phone('3809766314')
-user03.add_phone('3809766222')
-user03.add_phone('3809766333')
+print("\nШукаємо запис в базі: ", '-' * 10)
+print(book.find_record('John'))
+print(book.find_record('Lalka'))
 
-# Добавляю юзерів
-user_list = [user01, user02, user03]
-for user in user_list:
-    book.add_record(user)
 
-# Вивожу всю базу
-book.print_contacts()
 
-# Видаляємо запис
-book.delete_record('No Name')
 
-# Добавляємо існуючого користувача
-print("\nAlready exists:", '-' * 10)
-book.add_record('Patrick')
-
-# Вивожу всю базу
-print('\nDeleted:', '-' * 10)
-book.print_contacts()
-
-# Шукаємо в контактах
-print("\nFinded:", '-' * 10)
-book.find_record("Patrick")
-
-print("\nFinded:", '-' * 10)
-book.find_record("Palala")
-
-# Змінюємо номер Патріка вводячи неправельний номер
-print("\nNot Changed:", '-' * 10)
-user01.edit_phone('0011223345', '00')
-book.find_record("Patrick")
-
-# Змінюємо на правельний
-print("\nChanged:", '-' * 10)
-user01.edit_phone('0011223345', '0000000000')
-book.find_record("Patrick")
-
-# Шукаємо номер
-print("\nFinded:", '-' * 10)
-user02.find_phone('3809766314')
-
-# Шукаємо неіснуючий номер
-print("\nFinded:", '-' * 10)
-user02.find_phone('8803766314')
