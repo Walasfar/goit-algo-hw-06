@@ -15,7 +15,6 @@ class Name(Field):
 
 
 class Phone(Field):
-
     def __init__(self, value):
         super().__init__(value)
         
@@ -27,54 +26,40 @@ class Phone(Field):
 
 
 class Record:
-    
     def __init__(self, name: Name):
         self.name = Name(name)
         self.phones: list(Phone) = []
 
     def __str__(self):
-        return f"Contact name: {self.name}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name}, phones: {'; '.join(p.value for p in self.phones)};"
 
     def add_phone(self, phone: Phone):
-        
-        try:
-            phone_obj = Phone(phone)
-        except ValueError as e:
-            return e
-        
+        # Добавляємо телефон в базу
         for p in self.phones:
-            if  p.value == phone_obj.value:
+            if p.value == phone:
                 return "Телефон уже існує."
-        else:
-            self.phones.append(phone_obj)
+        self.phones.append(Phone(phone))
 
     def remove_phone(self, phone: str):
         self.phones = list(filter(lambda p: p.value != phone, self.phones))
         
-        
     def edit_phone(self, phone: str, new_phone: str):
-        try:
-            if not any(p.value == phone for p in self.phones):
-                raise ValueError("Номер який Ви хочете змінити - не існує.")
-            
-            new_phone_obj = Phone(new_phone)
-            for p in self.phones:
-                if p.value == phone:
-                    p = new_phone_obj
-                    
-        except ValueError as e:
-            return e
+        # Провірка чи такий телефон вообще існує.
+        if not any(p.value == phone for p in self.phones):
+            raise ValueError("Номер який Ви хочете змінити - не існує.")
+        
+        for p in self.phones:
+            if p.value == phone:
+                p.value = new_phone
 
     def find_phone(self, phone: str):
         for p in self.phones:
             if p.value == phone:
-                return p
-            else:
-                return None
+                return p.value
+        return None
 
 
 class AddressBook(UserDict):
-    
     def add_record(self, record: Record):
         self.data[record.name.value] = record
 
@@ -82,69 +67,34 @@ class AddressBook(UserDict):
         return self.data.get(name)
         
     def delete(self, name: str):
-        del self.data[name]
-
-    def show_contacts(self):
-        result = ""
-        for name, record in self.data.items():
-            result += f"{record}\n"
-        return result
+        if name in self.data:
+            del self.data[name]
 
 
 book = AddressBook()
 
 
-user01 = Record('John')
-user01.add_phone('8888888888')
-user01.add_phone('0000000000')
-user01.add_phone('3806822212')
+lara = Record('Lara')
+lara.add_phone('8888888888')
+lara.add_phone('0000000000')
+lara.add_phone('3806822212')
 
-user02 = Record('Elena')
-user02.add_phone('3809713312')
-user02.add_phone('4867133150')
+book.add_record(lara)
 
+erik = Record('Erik')
+erik.add_phone('3809799999')
+erik.add_phone('4878471001')
 
-user03 = Record('No name')
-user03.add_phone('3809722212')
-user03.add_phone('4867133555')
+book.add_record(erik)
 
-contacts = [user01, user02, user03]
+for name, record in book.data.items():
+    print(record)
 
-for contact in contacts:
-    book.add_record(contact)
-    
-print(book.show_contacts())
+book.find('Lara') # Contact name: Lara, phones: 8888888888; 0000000000; 3806822212;
 
-book.delete('No name')
+book.delete('Lara')
 
-print("\nПісля видалення запису: ", '-' * 10)
-print(book.show_contacts())
-
-print("\nПомилкові вводи номеру: ", '-' * 10)
-print(user01.add_phone('000000000')) # Недостатньо чисел
-print(user01.add_phone('000000000d')) # Містить букву
-
-print("\nНормальний ввід номеру: ", '-' * 10)
-print(user01.add_phone('0000000000')) # Додаємо існуючий
-print(user01)
-
-user01.remove_phone('8888888888')
-print(user01)
-
-print("\nМіняємо номер: ", '-' * 10)
-print(user01)
-
-
-print(user01.edit_phone('1000000000', '0000011111'))
-user01.edit_phone('0000000000', '0000011111')
-
-print(user01)
-
-print("\nШукаємо номер: ", '-' * 10)
-print(user01.find_phone('0000011111'))
-print(user01.find_phone('0000011121'))
-
-
-print("\nШукаємо запис в базі: ", '-' * 10)
-print(book.find('John'))
-print(book.find('Lalka'))
+# Видаляємо номер
+erik.remove_phone('3809799999')
+# Змінюємо номер
+lara.edit_phone('8888888888', '1111111188')
