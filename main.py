@@ -98,3 +98,5 @@ book.delete('Lara')
 erik.remove_phone('3809799999')
 # Змінюємо номер
 lara.edit_phone('8888888888', '1111111188')
+# Шукаємо номер
+lara.find_phone('3806822212') # 3806822212
