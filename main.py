@@ -60,7 +60,7 @@ class Record:
             new_phone_obj = Phone(new_phone)
             for p in self.phones:
                 if p.value == phone:
-                    p.value = new_phone_obj.value
+                    p = new_phone_obj
                     
         except ValueError as e:
             return e
