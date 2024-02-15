@@ -44,7 +44,7 @@ class Record:
         
         for p in self.phones:
             if  p.value == phone_obj.value:
-                return "Phone already exist."
+                return "Телефон уже існує."
         else:
             self.phones.append(phone_obj)
 
