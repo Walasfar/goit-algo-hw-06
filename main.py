@@ -61,8 +61,9 @@ class Record:
             for p in self.phones:
                 if p.value == phone:
                     p.value = new_phone_obj.value
+                    
         except ValueError as e:
-            return f"Error: {e}"
+            return e
 
     def find_phone(self, phone: str):
         for p in self.phones:
@@ -147,7 +148,3 @@ print(user01.find_phone('0000011121'))
 print("\nШукаємо запис в базі: ", '-' * 10)
 print(book.find('John'))
 print(book.find('Lalka'))
-
-
-
-
