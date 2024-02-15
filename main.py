@@ -38,9 +38,9 @@ class Record:
     def add_phone(self, phone: Phone):
         
         try:
-            phone_obj = Phone(phone)    
+            phone_obj = Phone(phone)
         except ValueError as e:
-            return f"Error: {e}"
+            return e
         
         for p in self.phones:
             if  p.value == phone_obj.value:
@@ -55,7 +55,7 @@ class Record:
     def edit_phone(self, phone: str, new_phone: str):
         try:
             if not any(p.value == phone for p in self.phones):
-                raise ValueError("Номер який хочете змінити - не існує.")
+                raise ValueError("Номер який Ви хочете змінити - не існує.")
             
             new_phone_obj = Phone(new_phone)
             for p in self.phones:
