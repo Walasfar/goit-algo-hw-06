@@ -50,12 +50,12 @@ class Record:
         
         for p in self.phones:
             if p.value == phone:
-                p.value = new_phone
+                p.value = Phone(new_phone)
 
     def find_phone(self, phone: str):
         for p in self.phones:
             if p.value == phone:
-                return p.value
+                return p
         return None
 
 
@@ -98,5 +98,11 @@ book.delete('Lara')
 erik.remove_phone('3809799999')
 # Змінюємо номер
 lara.edit_phone('8888888888', '1111111188')
+# lara.edit_phone('0000000000', '1111111188b') # Викидає ValueError
+
 # Шукаємо номер
-lara.find_phone('3806822212') # 3806822212
+finded_phone = lara.find_phone('3806822212')
+
+print(isinstance(finded_phone, Phone))
+
+print(finded_phone)
