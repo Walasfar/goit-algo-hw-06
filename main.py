@@ -98,7 +98,7 @@ book.delete('Lara')
 erik.remove_phone('3809799999')
 # Змінюємо номер
 lara.edit_phone('8888888888', '1111111188')
-# lara.edit_phone('0000000000', '1111111188b') # Викидає ValueError
+# lara.edit_phone('0000000000', '111111118b') # Викидає ValueError
 
 # Шукаємо номер
 finded_phone = lara.find_phone('3806822212')
