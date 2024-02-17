@@ -45,12 +45,12 @@ class Record:
         
     def edit_phone(self, phone: str, new_phone: str):
         # Провірка чи такий телефон вообще існує.
-        if not any(p.value == phone for p in self.phones):
-            raise ValueError("Номер який Ви хочете змінити - не існує.")
-        
         for p in self.phones:
             if p.value == phone:
                 p.value = Phone(new_phone)
+                break
+        else:
+            raise ValueError("Номер який Ви хочете змінити - не існує.")
 
     def find_phone(self, phone: str):
         for p in self.phones:
