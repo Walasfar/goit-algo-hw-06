@@ -31,7 +31,7 @@ class Record:
         self.phones: list(Phone) = []
 
     def __str__(self):
-        return f"Contact name: {self.name}, phones: {'; '.join(p.value for p in self.phones)};"
+        return f"Contact name: {self.name}, phones: {'; '.join(str(p) for p in self.phones)};"
 
     def add_phone(self, phone: Phone):
         # Добавляємо телефон в базу
@@ -92,13 +92,16 @@ for name, record in book.data.items():
 
 book.find('Lara') # Contact name: Lara, phones: 8888888888; 0000000000; 3806822212;
 
-book.delete('Lara')
-
 # Видаляємо номер
 erik.remove_phone('3809799999')
 # Змінюємо номер
+
+print(lara)
+
 lara.edit_phone('8888888888', '1111111188')
 # lara.edit_phone('0000000000', '111111118b') # Викидає ValueError
+
+print(lara)
 
 # Шукаємо номер
 finded_phone = lara.find_phone('3806822212')
